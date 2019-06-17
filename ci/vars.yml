@@ -1,0 +1,28 @@
+---
+
+app:
+  name_qa: groovy-pingpong
+  name_prod: groovy-pingpong
+  url: https://groovy-pingpong.cfapps.io  # QA env' url
+
+git:
+  uri: https://github.com/brightzheng100/groovy-pingpong.git
+  branch: master
+
+# QA Env
+qa:
+  api: yourapiserver        # e.g. https://api.run.pivotal.io
+  username: your@email.com
+  password: yourpassword    # or if using CredHub integration: ((your_password))
+  organization: yourorg
+  space: yourspace
+  skip_cert_check: true
+
+# PROD Env
+prod:
+  api: yourapiserver        # e.g. https://api.run.pivotal.io
+  username: your@email.com
+  password: yourpassword    # or if using CredHub integration: ((your_password))
+  organization: yourorg
+  space: yourspace
+  skip_cert_check: true

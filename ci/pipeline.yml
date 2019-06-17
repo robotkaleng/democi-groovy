@@ -1,0 +1,87 @@
+---
+
+jobs:
+
+- name: deploy-to-qa
+  serial: true
+  plan:
+  - get: resource-git
+    trigger: true
+  - put: cf-qa
+    params:
+      manifest: resource-git/manifest.yml
+      vars:
+        name: ((app.name_qa))
+      current_app_name: ((app.name_qa))
+      path: resource-git/
+
+- name: SIT
+  serial: true
+  plan:
+  - aggregate:
+    - get: resource-git
+      passed: [deploy-to-qa]
+      trigger: true
+  - task: smoke-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      params:
+        app_url: ((app.url))
+      run:
+        path: sh
+        args:
+          - "-c"
+          - |
+            status_code=`wget --spider -S "${app_url}" 2>&1 | grep "HTTP/" | awk '{print $2}'`
+            echo "The status code returned is: $status_code"
+            if [ "$status_code" != "200" ]
+            then
+              echo "Expected status code from ${app_url} is 200, but got $status_code"
+              exit 1
+            fi
+
+- name: promote-to-prod
+  serial: true
+  plan:
+  - aggregate:
+    - get: resource-git
+      passed: [SIT]
+      #trigger: true
+  - put: cf-prod
+    params:
+      manifest: resource-git/manifest.yml
+      vars:
+        name: ((app.name_prod))
+      current_app_name: ((app.name_prod))
+      path: resource-git/
+
+resources:
+
+- name: resource-git
+  type: git
+  source:
+    uri: ((git.uri))
+    branch: ((git.branch))
+
+- name: cf-qa
+  type: cf
+  source:
+    api: ((qa.api))
+    username: ((qa.username))
+    password: ((qa.password))
+    organization: ((qa.organization))
+    space: ((qa.space))
+    skip_cert_check: ((qa.skip_cert_check))
+
+- name: cf-prod
+  type: cf
+  source:
+    api: ((prod.api))
+    username: ((prod.username))
+    password: ((prod.password))
+    organization: ((prod.organization))
+    space: ((prod.space))
+    skip_cert_check: ((prod.skip_cert_check))
