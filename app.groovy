@@ -7,7 +7,7 @@ class Application {
 	@RequestMapping("/")
 	@ResponseBody
 	public String index(Model model) {
-		return "<body bgcolor='blue'><h1>Hello Groovy World!</h1></body>"
+		return "<body bgcolor='red'><h1>Hello Groovy World!</h1></body>"
 	}
 
 	@RequestMapping("/ping")
