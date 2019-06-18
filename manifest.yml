@@ -1,5 +1,5 @@
 applications:
-- name: test-app    #groovy-pingpong
+- name: ((name))     #groovy-pingpong
   instances: 2
   memory: 800M
   disk_quota: 512M
