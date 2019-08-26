@@ -1,0 +1,6 @@
+applications:
+- name: test-app-groovy     #groovy-pingpong
+  instances: 2
+  memory: 800M
+  disk_quota: 512M
+  #random-route: true
