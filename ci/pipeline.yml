@@ -9,7 +9,7 @@ jobs:
     trigger: true
   - put: cf-qa
     params:
-      manifest: resource-git/app-manifest.yml
+      manifest: resource-git/manifest.yml
       vars:
         name: ((app.name_qa))
       current_app_name: ((app.name_qa))
@@ -52,7 +52,7 @@ jobs:
       #trigger: true
   - put: cf-prod
     params:
-      manifest: resource-git/app-manifest.yml
+      manifest: resource-git/manifest.yml
       vars:
         name: ((app.name_prod))
       current_app_name: ((app.name_prod))
